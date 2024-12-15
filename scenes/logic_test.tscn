@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3 uid="uid://bpgg38cwqc6qe"]
+
+[ext_resource type="Texture2D" uid="uid://dmvpxxmkd5wva" path="res://assests/test/background_gameplay.jpg" id="1_eip6d"]
+[ext_resource type="Script" path="res://scripts/tui_manager.gd" id="2_sm0gl"]
+[ext_resource type="Script" path="res://scripts/player_hand.gd" id="4_jejrb"]
+
+[node name="logic_test" type="Node2D"]
+
+[node name="env" type="Node2D" parent="."]
+
+[node name="background" type="TextureRect" parent="env"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+texture = ExtResource("1_eip6d")
+
+[node name="tui_manager" type="Node2D" parent="."]
+script = ExtResource("2_sm0gl")
+
+[node name="PlayerHand" type="Node2D" parent="."]
+script = ExtResource("4_jejrb")
+
+[node name="action" type="Node2D" parent="."]
