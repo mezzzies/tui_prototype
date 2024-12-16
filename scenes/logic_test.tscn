@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3 uid="uid://bpgg38cwqc6qe"]
+[gd_scene load_steps=5 format=3 uid="uid://bpgg38cwqc6qe"]
 
 [ext_resource type="Texture2D" uid="uid://dmvpxxmkd5wva" path="res://assests/test/background_gameplay.jpg" id="1_eip6d"]
 [ext_resource type="Script" path="res://scripts/tui_manager.gd" id="2_sm0gl"]
+[ext_resource type="Script" path="res://scripts/ai_player.gd" id="3_p2ly1"]
 [ext_resource type="Script" path="res://scripts/player_hand.gd" id="4_jejrb"]
 
 [node name="logic_test" type="Node2D"]
@@ -9,6 +10,7 @@
 [node name="env" type="Node2D" parent="."]
 
 [node name="background" type="TextureRect" parent="env"]
+self_modulate = Color(0.244776, 0.244776, 0.244776, 1)
 offset_right = 1920.0
 offset_bottom = 1080.0
 texture = ExtResource("1_eip6d")
@@ -16,7 +18,43 @@ texture = ExtResource("1_eip6d")
 [node name="tui_manager" type="Node2D" parent="."]
 script = ExtResource("2_sm0gl")
 
+[node name="AI_Players" type="Node2D" parent="."]
+script = ExtResource("3_p2ly1")
+
+[node name="AI_1" type="Node2D" parent="AI_Players"]
+
+[node name="AI_2" type="Node2D" parent="AI_Players"]
+
+[node name="AI_3" type="Node2D" parent="AI_Players"]
+
 [node name="PlayerHand" type="Node2D" parent="."]
 script = ExtResource("4_jejrb")
 
-[node name="action" type="Node2D" parent="."]
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 1584.0
+offset_top = 709.0
+offset_right = 1584.0
+offset_bottom = 709.0
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Confirm" type="Button" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.889413, 0.889413, 1.54018e-06, 1)
+theme_override_font_sizes/font_size = 40
+text = "CONFIRM"
+
+[node name="Reset" type="Button" parent="UI/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.890196, 0.890196, 0, 1)
+theme_override_font_sizes/font_size = 35
+text = "RESET"

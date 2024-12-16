@@ -11,6 +11,7 @@ class Tui:
 	func _init(name: String, priority: int):
 		self.name = name
 		self.priority = priority
+		
 # List of tuis (tui) with names and priorities
 var tuis = []
 enum e_tui_val{
@@ -23,24 +24,14 @@ enum e_tui_val{
 	B_1,R_1  #king
 }
 
-var tui_being_dragged
 var screen_size
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
-	#print(players["Player 1"][0].name)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if tui_being_dragged:
-		Gvar.tui_being_dragged_flag = true
-		var mouse_pos = get_global_mouse_position()
-		tui_being_dragged.position = Vector2(clamp(mouse_pos.x, 0, screen_size.x),
-			clamp(mouse_pos.y, 0, screen_size.y))
-		print("mouse_pos = ",mouse_pos)
-		print("tui_being_dragged.position = ",tui_being_dragged.position)
-	
 	match Gvar.game_state:
 		Gvar.e_state.INIT:
 			initialize_tuis()
@@ -48,10 +39,27 @@ func _process(delta: float) -> void:
 			print_player_cards()
 			#animation
 			Gvar.game_state = Gvar.e_state.HANDING
+			print("state to HANDING")
+			for i in 4:
+				Gvar.players_hand_ready_status[i] = false #ONLINE NEED CHECK
 		Gvar.e_state.HANDING:
+			var ready_count = 0
+			for i in 4:
+				if Gvar.players_hand_ready_status[i] == true: #ONLINE NEED CHECK
+					ready_count += 1
+			if ready_count == 4:
+				Gvar.game_state = Gvar.e_state.SELECTING
+				print("state to SELECTING")
+		Gvar.e_state.WAITING_TO_SELECT:
 			pass
-		Gvar.e_state.WAITING:
-			pass
+		Gvar.e_state.SELECTING:
+			var confirm_count = 0
+			for i in 4:
+				if Gvar.players_confirm_hand_status[i] == true: #ONLINE NEED CHECK
+					confirm_count += 1
+			if confirm_count == 4:
+				Gvar.game_state = Gvar.e_state.CHECKING
+				print("state to CHECKING")
 		Gvar.e_state.CHECKING:
 			pass
 		Gvar.e_state.RESULT:
@@ -59,19 +67,7 @@ func _process(delta: float) -> void:
 		_:
 			pass
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.is_pressed():
-			var tui = raycast_check_for_card()
-			if tui:
-				tui_being_dragged = tui
-			# Raycast check for card
-		else:
-			tui_being_dragged = null
-			Gvar.tui_being_dragged_flag = false
-			print("Left Click Release")
-			
-func raycast_check_for_card():
+func raycast_check_for_tui():
 	var space_state = get_world_2d().direct_space_state
 	var params = PhysicsPointQueryParameters2D.new()
 	params.position = get_global_mouse_position()
@@ -117,15 +113,15 @@ func initialize_tuis():
 
 func shuffle_and_distribute_cards():
 	tuis.shuffle()
-	var player_keys = Gvar.players.keys()
+	var player_keys = Gvar.player_hand.keys()
 	for i in range(tuis.size()):
 		var player = player_keys[i % 4]  # Distribute evenly among 4 players
-		Gvar.players[player].append(tuis[i])
+		Gvar.player_hand[player].append(tuis[i])
 	print("Tuis shuffled and distributed!")
 
 # Print the cards for each player --------------- DEBUG
 func print_player_cards():
-	for player in Gvar.players:
+	for player in Gvar.player_hand:
 		print(player, "'s Tuis:")
-		for tui in Gvar.players[player]:
+		for tui in Gvar.player_hand[player]:
 			print("\t", tui.name, " (Priority: ", tui.priority, ")")

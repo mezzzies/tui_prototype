@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://obrxkd122p7w"]
+[gd_scene load_steps=4 format=3 uid="uid://obrxkd122p7w"]
+
+[ext_resource type="Script" path="res://scripts/tui.gd" id="1_rueo0"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_wxfdp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_i3jax"]
 
 [node name="tui" type="Node2D"]
-scale = Vector2(0.25, 0.25)
+scale = Vector2(0.5, 0.5)
+script = ExtResource("1_rueo0")
 
 [node name="tui_skin" type="Sprite2D" parent="."]
 texture = SubResource("CompressedTexture2D_wxfdp")
@@ -16,3 +19,8 @@ texture = SubResource("CompressedTexture2D_wxfdp")
 position = Vector2(1, 4)
 scale = Vector2(14.24, 14.12)
 shape = SubResource("CircleShape2D_i3jax")
+
+[connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
+[connection signal="mouse_entered" from="Area2D" to="." method="_on_area_2d_mouse_entered"]
+[connection signal="mouse_exited" from="Area2D" to="." method="_on_area_2d_mouse_exited"]

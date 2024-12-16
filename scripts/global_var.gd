@@ -1,15 +1,33 @@
 extends Node
 
+#---------------------------PLAYERS-------------------------
+# Define the structure of each player (tui)
+class Player:
+	var name: String
+	var player_order: int
+	var player_hand_count: int
+	func _init(name: String, player_order: int,player_hand_count):
+		self.name = name
+		self.player_order = player_order
+		self.player_hand_count = player_hand_count
+		
 enum e_state{
 	INIT,
 	HANDING,
-	WAITING,
+	WAITING_TO_SELECT,
+	SELECTING,
 	CHECKING,
 	RESULT
 }
 var game_state = e_state.INIT
 #---------------------------Players------------------------
-var players = {
+var player_hand = {
+	"Player 1": [],
+	"Player 2": [],
+	"Player 3": [],
+	"Player 4": []
+}
+var player_slot = {
 	"Player 1": [],
 	"Player 2": [],
 	"Player 3": [],
@@ -32,6 +50,9 @@ var tui_skin_name = {
 	"Red King": "R_1"
 }
 
+var players_hand_ready_status = [false,false,false,false]
+var players_confirm_hand_status = [false,false,false,false]
+
 # Time variable
 var time_accumulator = 0.0  # Accumulates delta each frame
 var seconds_count = 0
@@ -40,8 +61,6 @@ var hours_count = 0
 var second_flag = false
 var minute_flag = false
 var hour_flag = false
-
-var tui_being_dragged_flag = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
